@@ -1,0 +1,33 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "account_file": "/root/cred.json",
+      "project_id": "decisive-mapper-265906",
+      "ssh_username":"ubuntu",
+      "source_image_family": "ubuntu-1604-lts",
+      "image_name": "my-apache-image",
+      "zone": "us-central1-a",
+      "machine_type":"n1-standard-1",
+      "disk_size": "10",
+      "on_host_maintenance":"TERMINATE",
+      "image_family":"apache"
+    }
+  ],
+  "provisioners":[
+    {
+           "type": "shell",
+           "inline": [
+                "sudo apt-get clean",
+                "sudo apt-add-repository ppa:ansible/ansible",
+                "sudo apt-get update",
+                "sudo apt-get -y upgrade",
+                "sudo apt-get -y install ansible"
+           ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "./playbook.yml"
+    }
+  ]
+}
