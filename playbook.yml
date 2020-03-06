@@ -1,0 +1,26 @@
+- name : packer_ansible
+  hosts: all
+  become: yes
+  tasks:
+  - name: Install apache packages
+    apt:
+      name: apache2
+      state: present
+  - name: Create admins group
+    group:
+      name: admins
+      system: yes
+      state: present
+  - name: make sure we can sudo as admin group
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%admins'
+      line: '%admins ALL=(ALL) NOPASSWD:ALL'
+  - name: Create the non-root user account
+    user:
+      name: "testuser"
+      password: "test123"
+      groups: admins
+      append: yes
+      state: present
